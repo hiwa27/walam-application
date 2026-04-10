@@ -1,0 +1,15 @@
+{
+  "project": ".\\builder.exe ios build --unsigned",
+  "platform": "ios",
+  "github": {
+    "owner": "hiwa27",
+    "repo": "walam-application"
+  },
+  "ios": {},
+  "flutter": {
+    "version": "3.41.0",
+    "watch": {}
+  },
+  "reactNative": {},
+  "mobai": {}
+}
