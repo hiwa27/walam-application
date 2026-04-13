@@ -110,8 +110,8 @@ class _WalamShellPageState extends State<WalamShellPage> {
 
             final bool connectivityIssue = _looksLikeConnectivityIssue(error);
             final String fallbackMessage = connectivityIssue
-                ? 'Check your connection and try loading Walam again.'
-                : 'Something went wrong while loading this page.';
+                ? 'پەیوەندی ئینتەرنێتت بپشکنە و دووبارە هەوڵبدەوە.'
+                : 'کێشەیەک لە بارکردنی ئەم پەڕەیەدا ڕوویدا.';
 
             setState(() {
               session.isLoading = false;
@@ -126,7 +126,9 @@ class _WalamShellPageState extends State<WalamShellPage> {
                 identical(session, _currentTab)) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('The page could not be loaded. Please retry.'),
+                  content: Text(
+                    'بارکردنی پەڕەکە سەرکەوتوو نەبوو. تکایە دووبارە هەوڵبدەوە.',
+                  ),
                 ),
               );
             }
@@ -285,7 +287,7 @@ class _WalamShellPageState extends State<WalamShellPage> {
               onRetry: () => unawaited(_loadTab(_currentTab, force: true)),
               message:
                   _currentTab.errorMessage ??
-                  'Check your connection and try again.',
+                  'پەیوەندی ئینتەرنێتت بپشکنە و دووبارە هەوڵبدەوە.',
             ),
           ),
         if (_currentTab.isLoading && !_currentTab.showOfflineScreen)
@@ -324,13 +326,13 @@ class _WalamShellPageState extends State<WalamShellPage> {
                   children: [
                     const Expanded(
                       child: Text(
-                        'Page is taking longer than usual to load.',
+                        'بارکردنی پەڕەکە زیاتر لە ئاسایی کاتی دەوێت.',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
                     TextButton(
                       onPressed: () => unawaited(_refreshCurrentTab()),
-                      child: const Text('Retry'),
+                      child: const Text('دووبارە'),
                     ),
                   ],
                 ),
@@ -386,7 +388,7 @@ class _WalamShellPageState extends State<WalamShellPage> {
                 actions: [
                   IconButton(
                     onPressed: () => unawaited(_refreshCurrentTab()),
-                    tooltip: 'Refresh',
+                    tooltip: 'نوێکردنەوە',
                     icon: const Icon(Icons.refresh_rounded),
                   ),
                 ],

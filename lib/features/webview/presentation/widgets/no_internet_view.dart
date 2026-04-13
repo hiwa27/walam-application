@@ -47,7 +47,7 @@ class NoInternetView extends StatelessWidget {
                 const WalamLogo(size: 68),
                 const SizedBox(height: 22),
                 Text(
-                  'No Internet',
+                  'ئینتەرنێت نییە',
                   style: theme.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: const Color(0xFF0F1F1E),
@@ -66,7 +66,7 @@ class NoInternetView extends StatelessWidget {
                 FilledButton.icon(
                   onPressed: onRetry,
                   icon: const Icon(Icons.refresh_rounded),
-                  label: const Text('Try Again'),
+                  label: const Text('دووبارە هەوڵبدەوە'),
                 ),
               ],
             ),

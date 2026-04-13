@@ -5,9 +5,9 @@ enum WalamTab { home, search, profile }
 
 extension WalamTabX on WalamTab {
   String get label => switch (this) {
-    WalamTab.home => 'Home',
-    WalamTab.search => 'Start',
-    WalamTab.profile => 'Tutorial',
+    WalamTab.home => 'سەرەکی',
+    WalamTab.search => 'دەستپێکردن',
+    WalamTab.profile => 'فێرکاری',
   };
 
   IconData get icon => switch (this) {

@@ -1,8 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 import 'package:walam_mobile_app/features/webview/presentation/widgets/walam_logo.dart';
 
-class WalamSplashScreen extends StatelessWidget {
-  const WalamSplashScreen({super.key});
+class WalamSplashScreen extends StatefulWidget {
+  const WalamSplashScreen({super.key, this.enableVideoPlayback = true});
+
+  final bool enableVideoPlayback;
+
+  @override
+  State<WalamSplashScreen> createState() => _WalamSplashScreenState();
+}
+
+class _WalamSplashScreenState extends State<WalamSplashScreen> {
+  VideoPlayerController? _videoController;
+  bool _videoReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!widget.enableVideoPlayback) {
+      return;
+    }
+
+    _videoController = VideoPlayerController.asset(
+      'assets/videos/splash_logo.mp4',
+    );
+
+    _videoController!
+      ..setLooping(true)
+      ..setVolume(0)
+      ..initialize().then((_) {
+        if (!mounted) {
+          return;
+        }
+        _videoController!.play();
+        setState(() {
+          _videoReady = true;
+        });
+      });
+  }
+
+  @override
+  void dispose() {
+    _videoController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +85,26 @@ class WalamSplashScreen extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const WalamLogo(size: 90, showWordmark: true),
+                  _videoReady
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(24),
+                          child: SizedBox(
+                            width: 110,
+                            height: 110,
+                            child: FittedBox(
+                              fit: BoxFit.cover,
+                              child: SizedBox(
+                                width: _videoController!.value.size.width,
+                                height: _videoController!.value.size.height,
+                                child: VideoPlayer(_videoController!),
+                              ),
+                            ),
+                          ),
+                        )
+                      : const WalamLogo(size: 90, showWordmark: true),
                   const SizedBox(height: 22),
                   Text(
-                    'Marketplace access in one tap.',
+                    'بە یەک کرتە، دەستت دەگات بە Walam.',
                     style: theme.textTheme.titleMedium?.copyWith(
                       color: const Color(0xFF33514D),
                       fontWeight: FontWeight.w600,
@@ -64,7 +122,7 @@ class WalamSplashScreen extends StatelessWidget {
                       border: Border.all(color: const Color(0xFFD7E7E1)),
                     ),
                     child: Text(
-                      'Secure WebView experience for walam.app',
+                      'ئەزموونی پارێزراوی WebView بۆ walam.app',
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: const Color(0xFF4D6561),
                         fontWeight: FontWeight.w600,
