@@ -1,30 +1,95 @@
 name: Build iOS IPA
+
 on:
   workflow_dispatch:
+    inputs:
+      build_id:
+        description: "Build identifier (optional)"
+        required: false
+        type: string
+        default: ""
+      ios_path:
+        description: "iOS folder path"
+        required: false
+        type: string
+        default: "ios"
+      scheme:
+        description: "Xcode scheme (optional)"
+        required: false
+        type: string
+        default: ""
+      use_signing:
+        description: "Code signing (not used, kept for builder compatibility)"
+        required: false
+        type: boolean
+        default: false
+      configuration:
+        description: "Build configuration"
+        required: false
+        type: string
+        default: "Release"
+      flutter_version:
+        description: "Flutter version"
+        required: false
+        type: string
+        default: "3.41.0"
 
 jobs:
   build:
     runs-on: macos-latest
+    timeout-minutes: 35
+
     steps:
-      - uses: actions/checkout@v4
-      
-      - uses: subosito/flutter-action@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
+          flutter-version: ${{ inputs.flutter_version }}
           channel: stable
-          
-      - run: flutter clean
-      
-      - run: flutter pub get
-      
-      - run: flutter build ios --release --no-codesign
-      
-      - name: Create IPA from .app
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Build iOS (no codesign)
         run: |
-          mkdir -p Payload
-          cp -R build/ios/iphoneos/Runner.app Payload/
-          zip -r WalamApp.ipa Payload/
-          
-      - uses: actions/upload-artifact@v4
+          if [ "${{ inputs.configuration }}" = "Debug" ]; then
+            flutter build ios --debug --no-codesign
+          else
+            flutter build ios --release --no-codesign
+          fi
+
+      - name: Package unsigned IPA
+        id: package
+        run: |
+          set -e
+          BUILD_ID="${{ inputs.build_id }}"
+          if [ -z "$BUILD_ID" ]; then
+            BUILD_ID="walam-${{ github.run_id }}"
+          fi
+
+          APP_PATH="build/ios/iphoneos/Runner.app"
+          if [ ! -d "$APP_PATH" ]; then
+            echo "Runner.app not found at $APP_PATH"
+            exit 1
+          fi
+
+          mkdir -p build/Payload
+          cp -R "$APP_PATH" build/Payload/
+          (
+            cd build
+            zip -qry "${BUILD_ID}.ipa" Payload
+          )
+          rm -rf build/Payload
+
+          echo "ipa_path=build/${BUILD_ID}.ipa" >> "$GITHUB_OUTPUT"
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: WalamApp-IPA
-          path: WalamApp.ipa
+          name: ipa
+          path: ${{ steps.package.outputs.ipa_path }}
+          if-no-files-found: error
+          retention-days: 7
