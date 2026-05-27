@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "Walam",
+    "slug": "walam-mobile",
+    "scheme": "walam",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "icon": "./assets/walam-icon.png",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "splash": {
+      "image": "./assets/walam-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0f172a"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "icon": "./assets/walam-icon.png",
+      "bundleIdentifier": "app.walam.mobile",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "app.walam.mobile",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/walam-icon.png",
+        "backgroundColor": "#0f172a"
+      }
+    },
+    "extra": {
+      "apiBaseUrl": "https://walam.app/mobile-api.php",
+      "eas": {
+        "projectId": "8cc30550-faec-446e-a028-0af235ea9c04"
+      }
+    }
+  }
+}
