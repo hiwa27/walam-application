@@ -1,9 +1,0 @@
-
-> walam-mobile@1.0.0 start
-> expo start --host lan --port 8082 --clear
-
-Starting project at C:\myapp\walamapp\mobile
-Starting Metro Bundler
-warning: Bundler cache is empty, rebuilding (this may take a minute)
-Waiting on http://localhost:8082
-Logs for your project will appear below.
